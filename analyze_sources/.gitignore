@@ -1,0 +1,11 @@
+pred_real_charts/
+tmp_charts/
+charts/
+pred_real_charts/
+price_records/
+tmp_30/
+*.png
+*_err
+*_dump
+*_data
+*_lst

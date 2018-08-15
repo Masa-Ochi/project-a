@@ -1,0 +1,7 @@
+import training_chart_data as tcd
+s_mgr = tcd.source_data_set_mgr()
+s_mgr.set_ii_obj_by_id_lst([1305, 1306, 1308, 2002, 2327])
+s_mgr.predict_ii_obj("./tmp/model.ep07.h5")
+
+import invest_info as ii
+ii_obj = ii.investing_info([2327])
