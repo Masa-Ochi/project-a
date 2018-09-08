@@ -10,14 +10,14 @@ from mpl_finance import candlestick_ohlc
 from matplotlib.dates import date2num
 
 
-base_date = '2018-01-01'
+base_date = '2017-01-01'
 
-def update_charts_stats(stock_id):
+def update_charts_stats(stock_id, print_log=False):
 	crud = CRUD_for_STOCK_CHARTS()
 	date = base_date
 
 	stock_id = int(stock_id)
-	print("======= " + str(stock_id))
+	if print_log: print("======= " + str(stock_id)) 
 	try:
 		sql = "WHERE STOCK_ID=%s AND DATE > '%s' ORDER BY DATE" % (stock_id, date)
 		chart = crud.read_tbl_by_df(sql)
@@ -32,10 +32,11 @@ def update_charts_stats(stock_id):
 			chart = chart.rename(columns={'close_price': 'end_price', 'open_price': 'start_price'})
 			# print(chart)
 			crud.upsert_tbl_from_df(chart)
-			print("======= saved =======")
+			if print_log: print("======= saved =======")
 
 	except Exception as e:
-		print("error: " + str(e))
+		import traceback
+		traceback.print_exc()
 	# break
 
 
@@ -65,7 +66,8 @@ def main():
 				print("======= saved =======")
 
 		except Exception as e:
-			print("error: " + str(e))
+			import traceback
+			traceback.print_exc()
 		# break
 
 
@@ -125,7 +127,8 @@ def get_atr(chart, days_lst=[5, 10, 20, 40, 80]):
 	tmp_chart1 = chart.copy()
 	tmp_chart2 = chart.copy()
 	tmp_chart2["pre_close_price"] = np.r_[np.zeros(1), np.roll(tmp_chart1["close_price"].values.copy(), 1)[1:len(tmp_chart1["close_price"])]]
-	tmp_chart2.iloc[0,:]["pre_close_price"] = tmp_chart1.iloc[0,:]["low_price"].copy()
+	# tmp_chart2.iloc[0,:]["pre_close_price"] = tmp_chart1.iloc[0,:]["low_price"].copy()
+	tmp_chart2["pre_close_price"].iloc[0] = tmp_chart1["low_price"].iloc[0].copy()
 	# for d in range(1, len(tmp_chart2)):
 	# 	tmp_chart2.iloc[d, :]["pre_close_price"] = tmp_chart2.iloc[d-1, :]["close_price"]
 	tmp_chart1 = pd.merge(tmp_chart1, tmp_chart2[["stock_id", "date", "pre_close_price"]])

@@ -12,7 +12,8 @@ def main():
 
 class load_chart_csvs(object):
 
-	source_path = "/Users/masamitsuochiai/Documents/wk/analyze_sources/sources"
+	# source_path = "/Users/masamitsuochiai/Documents/wk/analyze_sources/sources"
+	source_path = "/Volumes/StreamS06_2TB/project_a/sources"
 	# source_path = "/Users/masamitsuochiai/Documents/wk/analyze_sources/test"
 
 	def __init__(self, host="localhost", database="project_a", user="masamitsuochiai"):

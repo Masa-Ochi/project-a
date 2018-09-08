@@ -15,16 +15,16 @@ class download_rakuten_selenium(object):
 
 	def __init__(self):
 		#### For test start ---
-		args = sys.argv # [0]:from page / [1]:to page
-		cwd = os.getcwd()
-		driver_path = '/Users/masamitsuochiai/Documents/wk/files/chromedriver'
-		chromeOptions = webdriver.ChromeOptions()
-		prefs = {"download.default_directory" : os.path.join(cwd, 'sources')}
-		chromeOptions.add_experimental_option("prefs",prefs)
-		self.driver = webdriver.Chrome(executable_path=driver_path, chrome_options=chromeOptions)
+		# args = sys.argv # [0]:from page / [1]:to page
+		# cwd = os.getcwd()
+		# driver_path = '/Users/masamitsuochiai/Documents/wk/files/chromedriver'
+		# chromeOptions = webdriver.ChromeOptions()
+		# prefs = {"download.default_directory" : os.path.join(cwd, 'sources')}
+		# chromeOptions.add_experimental_option("prefs",prefs)
+		# self.driver = webdriver.Chrome(executable_path=driver_path, chrome_options=chromeOptions)
 		#### For test end -----
 
-		# self.driver = webdriver.PhantomJS()
+		self.driver = webdriver.PhantomJS()
 
 		url = "https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html"
 		self.driver.get(url) 

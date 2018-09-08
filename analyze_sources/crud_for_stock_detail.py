@@ -8,6 +8,8 @@ class CRUD_for_STOCK_DETAIL(object):
 			"stock_name", 
 			"stock_market", 
 			"business_type",
+			"stock_unit",
+			"update_date",
 			]
 
 
@@ -16,17 +18,18 @@ class CRUD_for_STOCK_DETAIL(object):
 			dburl = "dbname=%s host=%s user=%s" % (database, host, user)
 			self.connection = psycopg2.connect(dburl)
 		except Exception as e:
-			print(str(e))
+			import traceback
+			traceback.print_exc()
 
 	def read_tbl_by_df(self, sql=""):
 		sql = "SELECT * FROM STOCK_DETAIL" + " " + str(sql) + ";"
 		try:
-			print(sql)
 			return_list = pd.read_sql(sql=sql, con=self.connection)
 			return return_list
 
 		except Exception as e:
-			print(e)
+			import traceback
+			traceback.print_exc()
 
 
 	def get_business_type_lst(self):
@@ -37,7 +40,8 @@ class CRUD_for_STOCK_DETAIL(object):
 			return return_list.values
 
 		except Exception as e:
-			print(e)
+			import traceback
+			traceback.print_exc()
 
 	def get_stock_market_lst(self):
 		sql = "SELECT distinct stock_market FROM STOCK_DETAIL;"
@@ -47,7 +51,8 @@ class CRUD_for_STOCK_DETAIL(object):
 			return return_list.values
 
 		except Exception as e:
-			print(e)
+			import traceback
+			traceback.print_exc()
 
 
 

@@ -281,11 +281,11 @@ class CRUD_for_STOCK_CHARTS(object):
 				insert_sql = (insert_sql[:-2] + 
 					") ON CONFLICT ON CONSTRAINT stock_charts_pkey " + 
 					"DO UPDATE SET start_price=excluded.start_price " + 
-					# ", high_price=excluded.high_price " + 
-					# ", low_price=excluded.low_price " + 
-					# ", end_price=excluded.end_price " + 
-					# ", output=excluded.output " + 
-					# ", adjusted_val=excluded.adjusted_val " + 
+					", high_price=excluded.high_price " + 
+					", low_price=excluded.low_price " + 
+					", end_price=excluded.end_price " + 
+					", output=excluded.output " + 
+					", adjusted_val=excluded.adjusted_val "
 					", move_avrg_5=excluded.move_avrg_5 " + 
 					", move_avrg_10=excluded.move_avrg_10 " + 
 					", move_avrg_20=excluded.move_avrg_20 " + 
@@ -296,7 +296,8 @@ class CRUD_for_STOCK_CHARTS(object):
 					", atr_20=excluded.atr_20 " + 
 					", atr_40=excluded.atr_40 " + 
 					", atr_80=excluded.atr_80 " + 
-					", rsi=excluded.rsi" )
+					", rsi=excluded.rsi" 
+					)
 				cur.execute(insert_sql, insert_r)
 
 			except Exception as e:

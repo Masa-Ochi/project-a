@@ -46,10 +46,7 @@ class CRUD_for_INVESTING_INFO(object):
 		{"name": "atr_20", "type": "double precision"}, 
 		{"name": "atr_40", "type": "double precision"}, 
 		{"name": "atr_80", "type": "double precision"}, 
-		{"name": "rsi", "type": "double precision"}, 
-		{"name": "stock_name", "type": "varchar(255)"}, 
-		{"name": "stock_market", "type": "varchar(255)"}, 
-		{"name": "business_type", "type": "varchar(255)"}, 
+		{"name": "rsi", "type": "double precision"},
 	]
 
 	def __init__(self, host="localhost", database="project_a", user="masamitsuochiai"):

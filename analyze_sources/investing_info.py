@@ -20,6 +20,7 @@ from pulp import *
 import download_charts_selenium as dcs
 import stock_charts_updateDB as scud
 
+import numba 
 
 
 
@@ -105,6 +106,18 @@ def get_ii_obj_by_market_category(stock_market, business_type, from_date, to_dat
 
 
 
+def standardize_arr(arr): # Assume arg is 3 dim variable, and col is ["open_price", "high_price", "low_price", "close_price", "output"]
+	max_val_lst  = np.empty((0, 2))
+	for i in range(len(arr)):
+		max_price  = arr[i,:,0:4].max()
+		max_output = arr[i,:,4:5].max()
+		# print([max_price, max_output])
+		arr[i, :, 0:4] = arr[i, :, 0:4] / max_price
+		arr[i, :, 4:5] = arr[i, :, 4:5] / max_output
+		max_val_lst  = np.vstack((max_val_lst, [max_price, max_output]))
+	return max_val_lst
+
+
 class investing_info(object):
 	id_lst = []
 	move_avrg_lst = []
@@ -132,36 +145,89 @@ class investing_info(object):
 			sql_str = "WHERE date >= '" + from_date_str + "' AND date <= '" + to_date_str + "'"
 			sql_str = sql_str + " ORDER BY stock_id, date" # [IMPORTANT]
 
+		self.df = self.crud.read_tbl_by_df(sql_str)
+		self.id_lst = self.df["stock_id"].drop_duplicates().values
+		self.id_json_lst = []
+		for i in self.id_lst:
+			tmp_json = {
+				"stock_id": int(i),
+				"date_len": len(self.df.loc[self.df["stock_id"]==int(i),["date"]])
+				}
+			self.id_json_lst.append(tmp_json)
+
 		if do_update:
 			print("Update stock charts...")
-			for cur_id in id_lst:
+			for cur_id in self.df["stock_id"].drop_duplicates().values:
 				try:
 					start = time.time()	
 					dcs.update_stock(str(cur_id))
-					scud.update_charts_stats(str(cur_id))
+					scud.update_charts_stats(str(cur_id), True)
 					elapsed_time = time.time() - start
-					print ("***** Update time:{0}".format(elapsed_time) + "[sec]")
+					print ("* Update time:{0}".format(elapsed_time) + "[sec]")
 				except Exception as e:
 					print("Error occured >>>>> %s"%str(cur_id))
-
-		self.df = self.crud.read_tbl_by_df(sql_str)
 		# Tmp code ----------------------------------
 		self.df = self.df.rename(columns={'end_price': 'close_price', 'start_price': 'open_price'})
 		# Tmp code ----------------------------------
-		self.set_sup_res_line(100)
+		# self.set_sup_res_line(100)
 		self.set_array()
 		# self.plt_chart_all()
 		# print(self.avrg_lne_param)
 
 	def set_array(self):
 		columns = self.df.columns
-		self.array = []
+		self.array = np.array([])
 		for i in self.id_lst:
-			tmp_df = self.df.loc[self.df["stock_id"]==int(i),:]
-			tmp_a = []
+			tmp_df = self.df.loc[self.df["stock_id"]==int(i)]
+			tmp_a = np.array([])
 			for c_idx in range(len(columns)):
-				tmp_a.append(tmp_df[columns[c_idx]])
-			self.array.append(tmp_a)
+				tmp_a = np.append(tmp_a, tmp_df[columns[c_idx]].values, axis=0)
+			self.array = np.append(self.array, tmp_a, axis=0)
+
+
+	def set_array_by_columns(self, col_lst):
+		self.array = np.array([])
+		for i in self.id_lst:
+			tmp_df = self.df.loc[self.df["stock_id"]==int(i),col_lst]
+			tmp_a = np.array([])
+			for i in range(len(tmp_df)):
+				tmp_a = np.append(tmp_a, tmp_df.iloc[i])
+			# for c_idx in range(len(col_lst)):
+			# 	tmp_a = np.append(tmp_a, tmp_df[col_lst[c_idx]].values, axis=0)
+			self.array = np.append(self.array, tmp_a, axis=0)
+
+	def get_arr_over_range(self, r,  delta=0, standardized=True, col_lst=["open_price", "high_price", "low_price", "close_price", "output"]):
+		arr      = np.array([])
+		date_lst = np.array([])
+		target_id_lst = [j['stock_id'] for j in self.id_json_lst if j.get('date_len')>=r+delta]
+		for cur_id in target_id_lst:
+			l = len(self.df.loc[self.df["stock_id"]==int(cur_id),col_lst])
+			tmp_df = self.df.loc[self.df["stock_id"]==int(cur_id),col_lst].iloc[l-r-delta:l-delta]
+			tmp_a = np.array([])
+			for cur_l in range(len(tmp_df)): 
+				tmp_a = np.append(tmp_a, tmp_df.iloc[cur_l])
+			arr = np.append(arr, tmp_a, axis=0)
+			tmp_d = self.df.loc[self.df["stock_id"]==int(cur_id),["date"]].iloc[l-r-delta:l-delta].values
+			date_lst = np.append(date_lst, tmp_d)
+		arr      = arr.reshape(-1, r, len(col_lst))
+		date_lst = date_lst.reshape(-1, r)
+		if standardized:
+			if col_lst == ["open_price", "high_price", "low_price", "close_price", "output"]:
+				max_val_lst = standardize_arr(arr)
+			else:
+				print("Columns are invalid to be standardized....")
+				max_price  = 1
+				max_output = 1
+		return arr, target_id_lst, date_lst, max_val_lst
+
+	def get_prices(self, date, stock_id, col=["open_price", "high_price", "low_price", "close_price", "output"]):
+		return_df = self.df.loc[(self.df["stock_id"]==stock_id)&(self.df["date"]==date), col]
+		return return_df
+
+
+
+
+
 
 	def set_sup_res_line(self, day=""):
 		real_id_lst = self.df["stock_id"].drop_duplicates()
