@@ -75,6 +75,12 @@ class prediction_mgr_for_ii_arr(object):
 		if return_with_ii_info:
 			return_df = pd.merge(self.ii_obj.df, return_df, on=["stock_id", "date"], how='right')
 		
+		return_df["stock_id"] = return_df["stock_id"].astype('int16')
+		return_df["open_price"] = return_df["open_price"].astype('float16')
+		return_df["high_price"] = return_df["high_price"].astype('float16')
+		return_df["low_price"] = return_df["low_price"].astype('float16')
+		return_df["close_price"] = return_df["close_price"].astype('float16')
+		return_df["output"] = return_df["output"].astype('int32')
 		return_df = return_df.sort_values(by=["date"], ascending=True)
 		return return_df
 

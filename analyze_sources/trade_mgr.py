@@ -39,10 +39,11 @@ class held_stock(object):
 		self.unit     = unit
 		self.ii_obj   = ii.investing_info([self.stock_id], cur_d-timedelta(days=365), cur_d)
 
-	def update_ii_obj(self, d=datetime.today()):
-		dcs.update_stock(self.stock_id)
-		scud.update_charts_stats(self.stock_id)
-		self.ii_obj = ii.investing_info([self.stock_id], d-timedelta(days=365), d, True)
+	def update_ii_obj(self, d=datetime.today(), updatedb=True):
+		if updatedb:
+			dcs.update_stock(self.stock_id)
+			scud.update_charts_stats(self.stock_id)
+		self.ii_obj = ii.investing_info([self.stock_id], d-timedelta(days=365), d, updatedb)
 
 
 class trade_mgr(object):

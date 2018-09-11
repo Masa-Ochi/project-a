@@ -20,7 +20,7 @@ class trade_func(object):
 			return self.budget, self.hs_lst
 		else:
 			if self.buy_amap:
-				return self.budget, self.hs_lst
+				return self.budget, self.hs_lsts
 			else:
 				return self.budget, self.hs_lst
 
@@ -34,6 +34,7 @@ class trade_func(object):
 			return self.budget, self.hs_lst
 
 		self.budget = self.budget + hs.b_amount * cur_price
+		print("cur_price: %d  b_amount: %d b_price: %d"%(cur_price, hs.b_amount, hs.b_price))
 		print("The profit is: %d"%(hs.b_amount * cur_price - hs.b_amount * hs.b_price))
 		self.hs_lst.remove(hs)
 		
