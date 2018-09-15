@@ -1,9 +1,11 @@
 # project-a
 
 ## よく使うコマンド
-pip install -r requirements.txt --ignore-installed  
+`pip install -r requirements.txt --ignore-installed`   
+```
 git reset --soft HEAD^  
 git rm --cached *_lst  
+```
 
 ## Tensorflowのビルド用コマンド
 1. configureを実行  
