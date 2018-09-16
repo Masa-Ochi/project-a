@@ -19,6 +19,14 @@ git rm --cached *_lst
 4. pip install でインストール　  
 `pip install /tmp/tensorflow_pkg/tensorflow-0.9.0-py3-none-any.whl`　 
 
+### 各サービスのバージョン
+|Name|Ver.|
+|:---|:---|
+|NVIDIA Web Driver|387.10.10.40.105|
+|CUDA Driver|396.148|
+|CUDA|9.0|
+|cuDNN|7.0.4 (Nov 13, 2017), for CUDA 9.0|
+
 ## Cuda
 - cuda driver   
 `/Developer/NVIDIA/`   
