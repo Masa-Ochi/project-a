@@ -25,7 +25,11 @@ git rm --cached *_lst
 ⇨driverインストール時にバージョンごとに生成されるので、利用するものをPATHへ追加   
 - cuDNN  
 `/usr/local/cuda`   
-⇨cuDNNをダウンロード後、展開したファイル（lib, include）をこの配下へコピーする必要あり
+⇨cuDNNをダウンロード後、展開したファイル（lib, include）をこの配下へコピーする必要あり   
+
+## eGPU on mac
+- Exec patch to anable eGPU on mac   
+https://egpu.io/forums/mac-setup/script-enable-egpu-on-tb1-2-macs-on-macos-10-13-4/
 
 ## Conda
 - pip installed folder   
