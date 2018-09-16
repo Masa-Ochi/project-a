@@ -26,3 +26,7 @@ git rm --cached *_lst
 - cuDNN  
 `/usr/local/cuda`   
 ⇨cuDNNをダウンロード後、展開したファイル（lib, include）をこの配下へコピーする必要あり
+
+## Conda
+- pip installed folder   
+`~/miniconda2/envs/[env_name]/lib/python3.6/site-packages/`
